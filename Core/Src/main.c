@@ -10,6 +10,7 @@ int main(void)
 	GPIO_InitTypeDef foo = {0};
 	
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 	
@@ -18,15 +19,23 @@ int main(void)
 	foo.Mode = GPIO_MODE_OUTPUT_PP;
   foo.Pull = GPIO_NOPULL;
 	foo.Speed = GPIO_SPEED_FREQ_LOW;
-
+	
 	HAL_GPIO_Init(GPIOA, &foo);
+	
+	foo.Pin = GPIO_PIN_12;
+	foo.Mode = GPIO_MODE_INPUT;
+  foo.Pull = GPIO_NOPULL;
+	
+	HAL_GPIO_Init(GPIOB, &foo);
 	
   while (1)
   {
+		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET){
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-		HAL_Delay(5000);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-		HAL_Delay(5000);
+		}
+		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET){
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+		}
   }
 }
 
